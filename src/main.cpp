@@ -37,6 +37,8 @@ void setup() {
 
   setEstados(false, false, false, false, false);
   actualizarEstadoLEDs(estadoLEDs);
+
+  Serial.println("Sistema de control de LEDs iniciado");
 }
 
 
@@ -56,14 +58,15 @@ void loop() {
   if(sw1)opcion=1;
   else if(sw5)opcion=5; 
   else if(sw6)opcion=6;
-  else if(sw5)opcion=7; 
-  else if(sw6)opcion=8;
+  else if(sw7)opcion=7; 
+  else if(sw8)opcion=8;
   else if(sw4 && !sw1 && !sw2 && !sw3)opcion=4;
   else if(sw3 && !sw1 && !sw2 && !sw4)opcion=3; 
   else if(sw2 && !sw1 && !sw3 && !sw4)opcion=2;
   else opcion=0;
   
   if(!sw1 && ledsEncendidosPorSW1 && !apagadoProgresivoHecho){
+    Serial.println("SW1 desactivado -> Apagado progresivo de TODOS lod LEDs");
     apagarProgresivoTodos();
     ledsEncendidosPorSW1=false;
     apagadoProgresivoHecho = true;
@@ -99,7 +102,37 @@ void loop() {
     setEstados(false, false, false, true, true);
     actualizarEstadoLEDs(estadoLEDs);
   break;
-    
+  
+  case 5:
+    Serial.println("Switches 2, 3 y 4 activados: LED2, LED3 y LED4 encendidos");
+    setEstados(false, true, true, true, false);
+    actualizarEstadoLEDs(estadoLEDs);
+    delay(2000);
+    setEstados(false, false, false, false, false);
+    actualizarEstadoLEDs(estadoLEDs);
+    break;
+
+  case 6:
+    Serial.println("Switches 3 y 4 activados: LED3, LED4 y LED5 encendidos");
+    setEstados(false, false, true, true, true);
+    actualizarEstadoLEDs(estadoLEDs);
+    break;
+
+  case 7:
+    Serial.println("Switches 2 y 3 activados: LED1, LED2 y LED5 encendidos");
+    setEstados(true, true, false, false, true);
+    actualizarEstadoLEDs(estadoLEDs);
+  break;
+
+  case 8:
+  Serial.println("Switches 2 y 4 activados: LED1 y LED5 encendidos");
+  setEstados(true, false, false, false, true);
+  actualizarEstadoLEDs(estadoLEDs);
+  delay(2000);
+  setEstados(false, false, false, false, false);
+  actualizarEstadoLEDs(estadoLEDs);
+  break;
+
   default:
     setEstados(false, false, false, false, false);
     actualizarEstadoLEDs(estadoLEDs);
