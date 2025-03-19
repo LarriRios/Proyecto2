@@ -111,9 +111,15 @@ void loop() {
     Serial.println("Switches 2, 3 y 4 activados: LED2, LED3 y LED4 encendidos");
     setEstados(false, true, true, true, false);
     actualizarEstadoLEDs(estadoLEDs);
-    delay(2000);
-    setEstados(false, false, false, false, false);
-    actualizarEstadoLEDs(estadoLEDs);
+    if (milliActual-milliPrevio>=1000 && !estadoLEDs[1] && !estadoLEDs[2] && !estadoLEDs[3]){
+      setEstados(false, true, true, true, false);
+      actualizarEstadoLEDs(estadoLEDs);
+      milliPrevio=milliActual;
+    } else if (milliActual-milliPrevio>=1000 && estadoLEDs[1] && estadoLEDs[2] && estadoLEDs[3]){
+      setEstados(false, false, false, false, false);
+      actualizarEstadoLEDs(estadoLEDs);
+      milliPrevio=milliActual;
+    }
     break;
 
   case 6:
