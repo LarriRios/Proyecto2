@@ -11,6 +11,9 @@
 # define SW4_pin 18  // Cuarto switch
 
 bool estadoLEDs[5]={false, false, false, false, false}; //Vector para estados de LEDs
+unsigned long milliActual=0;
+unsigned long milliPrevio=0;
+
 bool ledsEncendidosPorSW1= false; 
 bool apagadoProgresivoHecho = false;
 
@@ -43,6 +46,7 @@ void setup() {
 
 
 void loop() {
+
   bool sw1= digitalRead(SW1_pin);
   bool sw2= digitalRead(SW2_pin);
   bool sw3= digitalRead(SW3_pin);
@@ -53,7 +57,7 @@ void loop() {
   bool sw7= sw2 && sw3;
   bool sw8= sw2 && sw4;
     
-
+  milliActual=millis();
   int opcion= 0;
   if(sw1)opcion=1;
   else if(sw5)opcion=5; 
@@ -122,15 +126,21 @@ void loop() {
     Serial.println("Switches 2 y 3 activados: LED1, LED2 y LED5 encendidos");
     setEstados(true, true, false, false, true);
     actualizarEstadoLEDs(estadoLEDs);
-  break;
+    break;
 
   case 8:
-  Serial.println("Switches 2 y 4 activados: LED1 y LED5 encendidos");
-  setEstados(true, false, false, false, true);
-  actualizarEstadoLEDs(estadoLEDs);
-  delay(2000);
-  setEstados(false, false, false, false, false);
-  actualizarEstadoLEDs(estadoLEDs);
+    Serial.println("Switches 2 y 4 activados: LED1 y LED5 encendidos");
+    setEstados(true, false, false, false, true);
+    actualizarEstadoLEDs(estadoLEDs);
+    if (milliActual-milliPrevio>=1000 && !estadoLEDs[0] && !estadoLEDs[4]){
+      setEstados(true, false, false, false, true);
+      actualizarEstadoLEDs(estadoLEDs);
+      milliPrevio=milliActual;
+    } else if (milliActual-milliPrevio>=1000 && estadoLEDs[0] && estadoLEDs[4]){
+      setEstados(false, false, false, false, false);
+      actualizarEstadoLEDs(estadoLEDs);
+      milliPrevio=milliActual;
+    }
   break;
 
   default:
