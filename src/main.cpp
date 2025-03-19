@@ -18,7 +18,7 @@ void encenderProgresivoTodos();
 void apagarProgresivoTodos();
 void actualizarEstadoLEDs(bool estados[]);
 void setEstados(bool e0, bool e1, bool e2, bool e3, bool e4);
-
+void mostrarEstadoEnSerial();
 
 void setup() {
   Serial.begin(9600);
@@ -138,6 +138,7 @@ void loop() {
     actualizarEstadoLEDs(estadoLEDs);
   break;
   }
+  mostrarEstadoEnSerial();
   delay(500);
 }
 
@@ -203,4 +204,15 @@ void apagarProgresivoTodos() {
   }
 
   setEstados(false, false, false, false, false);
+}
+
+void mostrarEstadoEnSerial(){
+  Serial.println("Estado actual de los LEDs");
+  for(int i=0; i<5;i++){
+    Serial.print("LED");
+    Serial.print(i+1);
+    Serial.print(": ");
+    Serial.println(estadoLEDs[i]?"Encendido" : "Apagado");
+  }
+  Serial.println("-----------------------------------");
 }
